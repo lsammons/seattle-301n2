@@ -12,33 +12,31 @@ function Article (opts) {
 }
 
 Article.prototype.toHtml = function() {
-  var $newArticle = $('article.template').clone();
+            var $newArticle = $('article.template').clone();
+            $newArticle.attr('data-category', this.category);
+            // DONE: Use jQuery to fill in the template with properties
+            // from this particular Article instance. We need to fill in:
+            // the author name and url, the article title and body, and the
+            // publication date.
 
-  $newArticle.attr('data-category', this.category);
+            $newArticle.find('h1').html(this.title);
+            $newArticle.find('address a').html(this.author);
+            $newArticle.find('section.article-body').html(this.body);
+            $newArticle.find('address a').attr('href', this.authorUrl);
+            // Include the publication date as a 'title' attribute to show on hover:
+            $newArticle.find('time[pubdate]').attr('title', this.publishedOn);
 
-  // TODO: Use jQuery to fill in the template with properties
-  // from this particular Article instance. We need to fill in:
-  // the author name and url, the article title and body, and the
-  // publication date.
+            // Display the date as a relative number of "days ago":
+            $newArticle.find('time').html('about ' + parseInt((new Date() - new Date(this.publishedOn))/60/60/24/1000) + ' days ago');
 
-  //$('h1').html(this.title);
+            $newArticle.append('<hr>');
 
-  $newArticle.find('h1').html(this.title);
+            // DONE: This cloned article is no longer a template, so we should remove that class...
 
-  // Include the publication date as a 'title' attribute to show on hover:
-  $newArticle.find('time[pubdate]').attr('title', this.publishedOn);
+            // Remove article.template so that this will show on page:
+            $('article').removeClass('template');
 
-  // Display the date as a relative number of "days ago":
-  $newArticle.find('time').html('about ' + parseInt((new Date() - new Date(this.publishedOn))/60/60/24/1000) + ' days ago');
-
-  $newArticle.append('<hr>');
-
-  // TODO: This cloned article is no longer a template, so we should remove that class...
-
-  // Remove article.template so that this will show on page:
-  $('article').removeClass('template');
-
-  return $newArticle;
+            return $newArticle;
 }
 
 rawData.sort(function(a,b) {
